@@ -1,5 +1,5 @@
 {
-  "name": "soo",
+  "name": "cobra09",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -8,9 +8,9 @@
     "start": "cross-env NODE_ENV=production node app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Cobra",
   "license": "ISC",
-  "description": "sesac team project1",
+  "description": "이 프로젝트는 사이트 가입 유저가 공동구매등록, 판매신청을 할 수 있는 플랫폼입니다.",
   "dependencies": {
     "axios": "^1.7.9",
     "cross-env": "^7.0.3",
