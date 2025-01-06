@@ -168,63 +168,78 @@ exports.getMyJoins = async (req, res) => {
 };
 
 // GET '/user/mypage' : 마이페이지 렌더링 + 사용자 정보 조회
+// 데이터 가져오는 함수 분리
+const getUserDetails = async (userId) => {
+  return await User.findOne({
+    where: { user_id: userId },
+    attributes: ['email', 'nickname'], // 필요한 필드만 선택
+    include: [
+      {
+        model: Order,
+        attributes: ['product_key', 'quantity'],
+        include: [
+          {
+            model: Product,
+          },
+        ],
+      },
+    ],
+  });
+};
+
+const getProductsByUser = async (userId) => {
+  return await Product.findAll({
+    where: { user_id: userId },
+    attributes: [
+      'product_key',
+      'name',
+      'deadline',
+      'max_quantity',
+      'price',
+      'image',
+    ],
+  });
+};
+
+const getUserWishlists = async (userId) => {
+  const wishlists = await Wishlists.findAll({
+    where: { user_id: userId },
+    attributes: ['product_key'],
+    include: [
+      {
+        model: Product,
+        attributes: ['name', 'price', 'image', 'deadline'],
+        as: 'ProductWishlists',
+      },
+    ],
+  });
+
+  return wishlists.map((wishlist) => {
+    const product = wishlist.dataValues.ProductWishlists?.dataValues;
+    return {
+      product_key: wishlist.dataValues.product_key,
+      name: product?.name,
+      price: product?.price,
+      image: product?.image,
+      deadline: product?.deadline,
+    };
+  });
+};
+
+// 메인 렌더링 함수
 exports.renderMypage = async (req, res) => {
   try {
-    // // 세션에서 사용자 ID 가져오기
     const userId = req.session.user.user_pk;
     if (!userId) {
-      // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
       return res.redirect('/auth/login');
     }
-    const user = await User.findOne({
-      where: { user_id: userId },
-      attributes: ['email', 'nickname'], // 필요한 필드만 선택
-      include: [
-        {
-          model: Order,
-          attributes: ['product_key', 'quantity'],
-          include: [
-            {
-              model: Product,
-            },
-          ],
-        },
-      ],
-    });
-    const images = user.Order_items.map((item) => item.product.image) || [];
-    const products = await Product.findAll({
-      where: { user_id: userId },
-      attributes: [
-        'product_key',
-        'name',
-        'deadline',
-        'max_quantity',
-        'price',
-        'image',
-      ],
-    });
-    const wishlists = await Wishlists.findAll({
-      where: { user_id: userId },
-      attributes: ['product_key'],
-      include: [
-        {
-          model: Product,
-          attributes: ['name', 'price', 'image', 'deadline'],
-          as: 'ProductWishlists',
-        },
-      ],
-    });
-    const formattedWishlists = wishlists.map((wishlist) => {
-      const product = wishlist.dataValues.ProductWishlists?.dataValues;
-      return {
-        product_key: wishlist.dataValues.product_key,
-        name: product?.name,
-        price: product?.price,
-        image: product?.image,
-        deadline: product?.deadline,
-      };
-    });
+    const user = await getUserDetails(userId);
+    const products = await getProductsByUser(userId);
+    const formattedWishlists = await getUserWishlists(userId);
 
+    const images = user.Order_items.map((item) => item.product.image) || [];
+
+    // 렌더링
     res.render('mypage', {
       isSuccess: true,
       user,
@@ -239,6 +254,78 @@ exports.renderMypage = async (req, res) => {
     res.status(500).send('서버 오류');
   }
 };
+
+// exports.renderMypage = async (req, res) => {
+//   try {
+//     // // 세션에서 사용자 ID 가져오기
+//     const userId = req.session.user.user_pk;
+//     if (!userId) {
+//       // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+//       return res.redirect('/auth/login');
+//     }
+//     const user = await User.findOne({
+//       where: { user_id: userId },
+//       attributes: ['email', 'nickname'], // 필요한 필드만 선택
+//       include: [
+//         {
+//           model: Order,
+//           attributes: ['product_key', 'quantity'],
+//           include: [
+//             {
+//               model: Product,
+//             },
+//           ],
+//         },
+//       ],
+//     });
+//     const images = user.Order_items.map((item) => item.product.image) || [];
+//     const products = await Product.findAll({
+//       where: { user_id: userId },
+//       attributes: [
+//         'product_key',
+//         'name',
+//         'deadline',
+//         'max_quantity',
+//         'price',
+//         'image',
+//       ],
+//     });
+//     const wishlists = await Wishlists.findAll({
+//       where: { user_id: userId },
+//       attributes: ['product_key'],
+//       include: [
+//         {
+//           model: Product,
+//           attributes: ['name', 'price', 'image', 'deadline'],
+//           as: 'ProductWishlists',
+//         },
+//       ],
+//     });
+//     const formattedWishlists = wishlists.map((wishlist) => {
+//       const product = wishlist.dataValues.ProductWishlists?.dataValues;
+//       return {
+//         product_key: wishlist.dataValues.product_key,
+//         name: product?.name,
+//         price: product?.price,
+//         image: product?.image,
+//         deadline: product?.deadline,
+//       };
+//     });
+
+//     res.render('mypage', {
+//       isSuccess: true,
+//       user,
+//       product: user.Order_items,
+//       order: products,
+//       image: images,
+//       wish: formattedWishlists,
+//       currentPage: '',
+//     });
+//   } catch (error) {
+//     console.error('마이페이지 렌더링 오류:', error);
+//     res.status(500).send('서버 오류');
+//   }
+// };
 
 // 특정 하나의 판매 물품만 가져옴 - GET /host/list/:id
 exports.getProduct = async (req, res) => {
