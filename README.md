@@ -22,6 +22,16 @@
 **Cobra09**는 유저들이 공동구매를 등록하고 판매를 신청할 수 있는 플랫폼입니다.  
 이 플랫폼은 쉽고 간편한 구매/판매 프로세스를 제공합니다.
 
+## **팀원 소개**
+
+| 이름   | 역할           | GitHub                   | 이메일               |
+| ------ | -------------- | ------------------------ | -------------------- |
+| 김철수 | 팀 리더        | [github.com/chulsoo](#)  | chulsoo@example.com  |
+| 박영희 | 프론트엔드     | [github.com/younghee](#) | younghee@example.com |
+| 이민준 | 백엔드         | [github.com/minjun](#)   | minjun@example.com   |
+| 정수빈 | 데이터베이스   | [github.com/subin](#)    | subin@example.com    |
+| 최하나 | UI/UX 디자이너 | [github.com/hana](#)     | hana@example.com     |
+
 ---
 
 ## **기능**
