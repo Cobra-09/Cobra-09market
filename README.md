@@ -1,8 +1,8 @@
 # **Cobra09**
 
-> **프로젝트 간단 설명 (1~2줄)**  
-> 아래는 기본 양식입니다. 개인 readme작성에 참고 바랍니다.
-> 코드 수정은 팀리포에서, readme수정은 개인 리포에서 하십시오!!!
+> **프로젝트 간단 설명 (1~2줄)**
+> 웹 사이트에 가입한 누구나 판매자 구매자가 될 수 있는 쇼핑몰 사이트입니다.
+
 ---
 
 ## **목차**
@@ -27,7 +27,7 @@
 
 | 이름   | 역할           | GitHub                   | 이메일               |
 | ------ | -------------- | ------------------------ | -------------------- |
-| 김철수 | 팀 리더        | [github.com/chulsoo](#)  | chulsoo@example.com  |
+| 최원정 | 팀 리더        | [github.com/chulsoo](#)  | chulsoo@example.com  |
 | 박영희 | 프론트엔드     | [github.com/younghee](#) | younghee@example.com |
 | 이민준 | 백엔드         | [github.com/minjun](#)   | minjun@example.com   |
 | 정수빈 | 데이터베이스   | [github.com/subin](#)    | subin@example.com    |
