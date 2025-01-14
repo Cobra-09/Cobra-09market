@@ -1,16 +1,14 @@
--- Active: 1734662630414@@175.121.178.197@3306@cobra09
-
 show databases;
 
 /*
 - notion의 DB정리 페이지 참고
 - .env 파일에 mysql 연결 정보 개인에 따라 수정 필요
 */
-create database cobra09;
 -- cobra09 데이터베이스 생성
+create database cobra09;
 
-use cobra09;
 -- cobra09 데이터베이스 사용
+use cobra09;
 
 -- 1. 'cobra' 사용자 생성 (비밀번호는 '1234'로 설정)
 CREATE USER 'cobra' @'%' IDENTIFIED BY '1234';
